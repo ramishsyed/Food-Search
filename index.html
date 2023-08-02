@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recipe Data</title>
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&family=IBM+Plex+Serif&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="parent">
+  <div class="grid" id="one">
+    <h1 class="Title">Food Search</h1>
+    <input type="text" id="searchInput" placeholder="Enter your search term:">
+  </div>
+  <div class="grid" id="two">
+    <p><label for="healthDropdown">Health Options (Hold CTRL to select multiple):</label></p>
+    <p>
+  <select id="healthDropdown" multiple>
+    <option value="alcohol-free">Alcohol Free</option>
+    <option value="celery-free">Celery Free</option>
+    <option value="crustacean-free">Crustacean Free</option>
+    <option value="dairy-free">Dairy Free</option>
+    <option value="egg-free">Egg Free</option>
+    <option value="fish-free">Fish Free</option>
+    <option value="fodmap-free">FODMAP Free</option>
+    <option value="gluten-free">Gluten Free</option>
+    <option value="keto-friendly">Keto Friendly</option>
+    <option value="kidney-friendly">Kidney Friendly</option>
+    <option value="kosher">Kosher</option>
+    <option value="lupine-free">Lupine Free</option>
+    <option value="mollusk-free">Mollusk Free</option>
+    <option value="mustard-free">Mustard Free</option>
+    <option value="peanut-free">Peanut Free</option>
+    <option value="pescatarian">Pescatarian</option>
+    <option value="pork-free">Pork Free</option>
+    <option value="seasame-free">Seasame Free</option>
+    <option value="soy-free">Soy Free</option>
+    <option value="sugar-conscious">Sugar Conscious</option>
+    <option value="sulfite-free">Sulfite Free</option>
+    <option value="tree-nut-free">Tree Nut Free</option>
+    <option value="vegan">Vegan</option>
+    <option value="vegetarian">Vegetarian</option>
+    <option value="wheat-free">Wheat Free</option>
+  </select></p>
+  <p><button onclick="searchRecipes()">Search</button></p>
+  </div>
+
+  <div class="grid">
+  
+  <!-- The output container -->
+  <div id="output"></div>
+
+  </div>
+</div>
+  
+
+  <!-- Your JavaScript code as an inline script -->
+  <script src="config.js"></script>
+  <script>
+
+    let healthOptions = [];
+
+    async function processData(q){
+        let dataGlobal;
+        let selectedHealth = ''; 
+        if (healthOptions.length > 0) {
+            for (let i = 0; i < healthOptions.length; i++) {
+                selectedHealth += "&health=" + healthOptions[i];
+            }
+        }
+        let excluded = "cheese"
+        let url="https://api.edamam.com/api/recipes/v2?"
+        let apiFetch = url.concat(
+            "type=public&q=",
+            q, 
+            api,
+            selectedHealth,
+            "&excluded=",
+            excluded,
+            "&random=true"
+        );
+
+
+        const getData = async () => {
+            
+            const response = await fetch(apiFetch);
+            const data = await response.json();
+            dataGlobal = data;
+            return data;
+        };
+
+            // Fetch the recipe data
+        const response = await fetch(apiFetch);
+        const data = await response.json();
+        dataGlobal = data;
+
+        // Process the data and update the outputContainer
+        const outputContainer = document.getElementById('output');
+        const output = [];
+
+        dataGlobal.hits.forEach(function (element) {
+            output.push(
+            `<p><img src="${element.recipe.image}"/></p><p>${element.recipe.label}:</p><p> <a href="${element.recipe.url}" target="_blank">${element.recipe.url}</a></p>`
+            );
+        });
+
+        // Join the output array and update the outputContainer
+        outputContainer.innerHTML = output.join('');
+       
+    }
+    async function searchRecipes() {
+      const searchInput = document.getElementById('searchInput');
+      const searchTerm = searchInput.value.trim();
+
+      // Process data with the user's search term
+      await processData(searchTerm);
+    }
+
+    document.getElementById('healthDropdown').addEventListener('change', function() {
+      const healthDropdown = document.getElementById('healthDropdown');
+      healthOptions = [];
+      for (let i = 0; i < healthDropdown.options.length; i++) {
+        const option = healthDropdown.options[i];
+        if (option.selected) {
+          healthOptions.push(option.value);
+        }
+      }
+
+      if (healthOptions.length === 0) {
+        healthOptions.push(healthDropdown.options[0].value);
+      }
+
+      // Trigger a search with the new health options
+      searchRecipes();
+    });
+
+  </script>
+</body>
+</html>

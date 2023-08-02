@@ -1,0 +1,21 @@
+h1{
+    font-family: 'IBM Plex Serif', serif;
+    color: #df9c93;
+    background-color: #2b2c2b;
+    padding: 30px;
+    text-align: center;
+}
+p, input, label{
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+.parent{
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+}
+
+
+
+
+
