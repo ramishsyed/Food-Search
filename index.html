@@ -11,7 +11,12 @@
   <div class="parent">
   <div class="grid" id="one">
     <h1 class="Title">Food Search</h1>
-    <input type="text" id="searchInput" placeholder="Enter your search term:">
+    <div class="box">
+      <form name="search">
+    <input type="text" class="input" id="searchInput" name="txt" >
+  </form>
+  <i class="fas fa-search"></i>
+</div>
   </div>
   <div class="grid" id="two">
     <p><label for="healthDropdown">Health Options (Hold CTRL to select multiple):</label></p>
@@ -43,7 +48,15 @@
     <option value="vegetarian">Vegetarian</option>
     <option value="wheat-free">Wheat Free</option>
   </select></p>
-  <p><button onclick="searchRecipes()">Search</button></p>
+
+  
+  <p><button class="button-82-pushable" role="button" onclick="searchRecipes()">
+    <span class="button-82-shadow"></span>
+  <span class="button-82-edge"></span>
+  <span class="button-82-front text">
+    Search
+  </span>
+  </button></p>
   </div>
 
   <div class="grid">
@@ -101,7 +114,14 @@
 
         dataGlobal.hits.forEach(function (element) {
             output.push(
-            `<p><img src="${element.recipe.image}"/></p><p>${element.recipe.label}:</p><p> <a href="${element.recipe.url}" target="_blank">${element.recipe.url}</a></p>`
+            `
+            <div>
+            <p><img src="${element.recipe.image}"/></p><p><b>${element.recipe.label}:</b></p><p> <a href="${element.recipe.url}" target="_blank">${element.recipe.url}</a></p>
+            </div>
+            <div>
+              <hr>
+              </div>
+            `
             );
         });
 
